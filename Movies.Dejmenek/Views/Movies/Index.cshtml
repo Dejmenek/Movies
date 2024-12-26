@@ -36,6 +36,9 @@
                 @Html.DisplayNameFor(model => model.Movies![0].Title)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Movies![0].ImageUri)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Movies![0].ReleaseDate)
             </th>
             <th>
@@ -55,6 +58,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                <img src="@item.ImageUri" class="img-thumbnail" style="width: 100px; height: 100px;" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
