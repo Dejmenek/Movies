@@ -146,7 +146,18 @@ namespace Movies.Dejmenek.Controllers
             {
                 return NotFound();
             }
-            return View(movie);
+            var editMovie = new EditMovieDTO
+            {
+                Id = movie.Id,
+                Title = movie.Title,
+                ReleaseDate = movie.ReleaseDate,
+                Genre = movie.Genre,
+                Price = movie.Price,
+                Rating = movie.Rating,
+                ImageUri = movie.ImageUri
+            };
+
+            return View(editMovie);
         }
 
         // POST: Movies/Edit/5
@@ -154,9 +165,9 @@ namespace Movies.Dejmenek.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating,ImageFile,ImageUri")] EditMovieDTO editMovie)
         {
-            if (id != movie.Id)
+            if (id != editMovie.Id)
             {
                 return NotFound();
             }
@@ -165,12 +176,31 @@ namespace Movies.Dejmenek.Controllers
             {
                 try
                 {
+                    if (editMovie.ImageFile != null)
+                    {
+                        string imageUri = await _blobService.UploadAsync(editMovie.ImageFile);
+                        await _blobService.DeleteAsync(editMovie.ImageUri);
+
+                        editMovie.ImageUri = imageUri;
+                    }
+
+                    var movie = new Movie
+                    {
+                        Id = editMovie.Id,
+                        Title = editMovie.Title,
+                        ReleaseDate = editMovie.ReleaseDate,
+                        Genre = editMovie.Genre,
+                        Price = editMovie.Price,
+                        Rating = editMovie.Rating,
+                        ImageUri = editMovie.ImageUri
+                    };
+
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MovieExists(movie.Id))
+                    if (!MovieExists(editMovie.Id))
                     {
                         return NotFound();
                     }
@@ -181,7 +211,7 @@ namespace Movies.Dejmenek.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(movie);
+            return View(editMovie);
         }
 
         // GET: Movies/Delete/5
