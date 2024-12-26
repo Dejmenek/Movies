@@ -5,16 +5,19 @@ using Movies.Dejmenek.Data;
 using Movies.Dejmenek.Enums;
 using Movies.Dejmenek.Helpers;
 using Movies.Dejmenek.Models;
+using Movies.Dejmenek.Services;
 
 namespace Movies.Dejmenek.Controllers
 {
     public class MoviesController : Controller
     {
         private readonly MovieContext _context;
+        private readonly IBlobService _blobService;
 
-        public MoviesController(MovieContext context)
+        public MoviesController(MovieContext context, IBlobService blobService)
         {
             _context = context;
+            _blobService = blobService;
         }
 
         // GET: Movies
@@ -76,7 +79,6 @@ namespace Movies.Dejmenek.Controllers
                 Movies = await PaginatedList<Movie>.CreateAsync(movies.AsNoTracking(), pageNumber ?? 1, pageSize)
             };
 
-
             return View(movieGenreVM);
         }
 
@@ -109,15 +111,26 @@ namespace Movies.Dejmenek.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating,ImageFile")] CreateMovieDTO createMovie)
         {
             if (ModelState.IsValid)
             {
+                string imageUri = await _blobService.UploadAsync(createMovie.ImageFile!);
+                var movie = new Movie
+                {
+                    Title = createMovie.Title,
+                    ReleaseDate = createMovie.ReleaseDate,
+                    Genre = createMovie.Genre,
+                    Price = createMovie.Price,
+                    Rating = createMovie.Rating,
+                    ImageUri = imageUri
+                };
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(movie);
+
+            return View(createMovie);
         }
 
         // GET: Movies/Edit/5
