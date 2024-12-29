@@ -1,3 +1,28 @@
+@font-face {
+    font-family: 'Thiccboi';
+    src: url('../fonts/THICCCBOI-Regular.woff2') format('woff2');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Thiccboi';
+    src: url('../fonts/THICCCBOI-Bold.woff2') format('woff2');
+    font-weight: 700;
+}
+
+:root {
+    --bs-body-bg: #742C6B;
+    --bs-body-color: #C9B1C4;
+    --bs-primary: #FEDA34;
+    --bs-primary-rgb: 254, 218, 52;
+    --bs-secondary: #fff;
+    --bs-secondary-rgb: 255, 255, 255;
+}
+
+.navbar-toggler-icon {
+    background-image: url('../img/Menu.svg');
+}
+
 html {
   font-size: 14px;
 }
@@ -18,5 +43,24 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: 'Thiccboi', sans-serif;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Thiccboi', sans-serif;
+  font-weight: 700;
+}
+
+.btn-outline-light:hover {
+    color: var(--bs-primary);
+}
+
+a {
+    color: white !important;
+}
+
+a:hover {
+    color: #FEDA34 !important;
 }
