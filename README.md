@@ -40,7 +40,12 @@
 3. **Restore dependencies**  
 	- In Visual Studio, go to the Tools menu and select NuGet Package Manager > Manage NuGet Packages for Solution.
 	- Alternatively, dependencies will be restored automatically when you build the solution. To manually restore NuGet packages: ```dotnet restore```
-4. **Build and run the project**  
+4. **Update the database**
+	- Run the following command to create the database and apply migrations:
+		```bash	
+	    Update-Database
+		```
+5. **Build and run the project**  
     - In Visual Studio, press Ctrl + Shift + B to build the project.
     - Then press F5 or click Start to run the project.
 
