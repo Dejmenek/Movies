@@ -18,7 +18,7 @@ public static class SeedData
                 Genre = "Romantic Comedy",
                 Price = 7.99M,
                 Rating = "R",
-                ImageUri = "https://placehold.co/100"
+                ImageUri = null
             },
             new Movie
             {
@@ -27,7 +27,7 @@ public static class SeedData
                 Genre = "Comedy",
                 Price = 8.99M,
                 Rating = "R",
-                ImageUri = "https://placehold.co/100"
+                ImageUri = null
             },
             new Movie
             {
@@ -36,7 +36,7 @@ public static class SeedData
                 Genre = "Comedy",
                 Price = 9.99M,
                 Rating = "R",
-                ImageUri = "https://placehold.co/100"
+                ImageUri = null
             },
             new Movie
             {
@@ -45,7 +45,7 @@ public static class SeedData
                 Genre = "Western",
                 Price = 3.99M,
                 Rating = "R",
-                ImageUri = "https://placehold.co/100"
+                ImageUri = null
             }
         );
         context.SaveChanges();
