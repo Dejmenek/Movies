@@ -11,6 +11,7 @@ public class Movie
     public string? Title { get; set; }
     [Display(Name = "Release Date")]
     [DataType(DataType.Date)]
+    [Required]
     public DateTime? ReleaseDate { get; set; }
     [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]
     [Required]
@@ -19,15 +20,17 @@ public class Movie
     [Range(1, 100)]
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
+    [Required]
     public decimal Price { get; set; }
     [RegularExpression(@"^[A-Z]+[a-zA-Z0-9""'\s-]*$")]
     [StringLength(5)]
     [Required]
     public string? Rating { get; set; }
-    public string? ImageUri { get; set; } = "https://placehold.co/100";
+    [Display(Name = "Image")]
+    public string? ImageUri { get; set; }
 }
 
-public class CreateMovieDTO
+public class MovieDTO
 {
     public int Id { get; set; }
     [StringLength(60, MinimumLength = 3)]
@@ -35,6 +38,7 @@ public class CreateMovieDTO
     public string? Title { get; set; }
     [Display(Name = "Release Date")]
     [DataType(DataType.Date)]
+    [Required]
     public DateTime? ReleaseDate { get; set; }
     [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]
     [Required]
@@ -43,37 +47,12 @@ public class CreateMovieDTO
     [Range(1, 100)]
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
-    public decimal Price { get; set; }
-    [RegularExpression(@"^[A-Z]+[a-zA-Z0-9""'\s-]*$")]
-    [StringLength(5)]
     [Required]
-    public string? Rating { get; set; }
-    [Required]
-    public IFormFile? ImageFile { get; set; }
-    public string? ImageUri { get; set; } = "https://placehold.co/100";
-}
-
-public class EditMovieDTO
-{
-    public int Id { get; set; }
-    [StringLength(60, MinimumLength = 3)]
-    [Required]
-    public string? Title { get; set; }
-    [Display(Name = "Release Date")]
-    [DataType(DataType.Date)]
-    public DateTime? ReleaseDate { get; set; }
-    [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]
-    [Required]
-    [StringLength(30)]
-    public string? Genre { get; set; }
-    [Range(1, 100)]
-    [DataType(DataType.Currency)]
-    [Column(TypeName = "decimal(18, 2)")]
     public decimal Price { get; set; }
     [RegularExpression(@"^[A-Z]+[a-zA-Z0-9""'\s-]*$")]
     [StringLength(5)]
     [Required]
     public string? Rating { get; set; }
     public IFormFile? ImageFile { get; set; }
-    public string? ImageUri { get; set; } = "https://placehold.co/100";
+    public string? ImageUri { get; set; }
 }

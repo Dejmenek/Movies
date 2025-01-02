@@ -13,6 +13,7 @@ namespace Movies.Dejmenek.Controllers
     {
         private readonly MovieContext _context;
         private readonly IBlobService _blobService;
+        private const int _pageSize = 4;
 
         public MoviesController(MovieContext context, IBlobService blobService)
         {
@@ -110,11 +111,15 @@ namespace Movies.Dejmenek.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating,ImageFile")] CreateMovieDTO createMovie)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating,ImageFile")] MovieDTO createMovie)
         {
             if (ModelState.IsValid)
             {
-                string imageUri = await _blobService.UploadAsync(createMovie.ImageFile!);
+                string imageUri = null;
+                if (createMovie.ImageFile != null)
+                {
+                    imageUri = await _blobService.UploadAsync(createMovie.ImageFile);
+                }
                 var movie = new Movie
                 {
                     Title = createMovie.Title,
@@ -145,7 +150,7 @@ namespace Movies.Dejmenek.Controllers
             {
                 return NotFound();
             }
-            var editMovie = new EditMovieDTO
+            var editMovie = new MovieDTO
             {
                 Id = movie.Id,
                 Title = movie.Title,
@@ -164,7 +169,7 @@ namespace Movies.Dejmenek.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating,ImageFile,ImageUri")] EditMovieDTO editMovie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating,ImageFile,ImageUri")] MovieDTO editMovie)
         {
             if (id != editMovie.Id)
             {
@@ -178,7 +183,7 @@ namespace Movies.Dejmenek.Controllers
                     if (editMovie.ImageFile != null)
                     {
                         string imageUri = await _blobService.UploadAsync(editMovie.ImageFile);
-                        await _blobService.DeleteAsync(editMovie.ImageUri);
+                        if (editMovie.ImageUri != null) await _blobService.DeleteAsync(editMovie.ImageUri);
 
                         editMovie.ImageUri = imageUri;
                     }
@@ -239,6 +244,7 @@ namespace Movies.Dejmenek.Controllers
             var movie = await _context.Movie.FindAsync(id);
             if (movie != null)
             {
+                if (movie.ImageUri != null) await _blobService.DeleteAsync(movie.ImageUri);
                 _context.Movie.Remove(movie);
             }
 
