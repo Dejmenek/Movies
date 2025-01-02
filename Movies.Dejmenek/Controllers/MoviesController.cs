@@ -68,7 +68,6 @@ namespace Movies.Dejmenek.Controllers
                 _ => movies.OrderBy(m => m.Title),
             };
 
-            int pageSize = 3;
             var movieGenreVM = new MovieGenreViewModel
             {
                 MovieGenre = movieGenre,
@@ -76,7 +75,7 @@ namespace Movies.Dejmenek.Controllers
                 SortOption = (SortOptions)sortOption,
                 Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
                 Ratings = new SelectList(await ratingsQuery.Distinct().ToListAsync()),
-                Movies = await PaginatedList<Movie>.CreateAsync(movies.AsNoTracking(), pageNumber ?? 1, pageSize)
+                Movies = await PaginatedList<Movie>.CreateAsync(movies.AsNoTracking(), pageNumber ?? 1, _pageSize)
             };
 
             return View(movieGenreVM);
