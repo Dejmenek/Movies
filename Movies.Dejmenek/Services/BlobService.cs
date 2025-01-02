@@ -16,7 +16,7 @@ public class BlobService : IBlobService
     private async Task EnsureContainerCreated()
     {
         BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-        await containerClient.CreateIfNotExistsAsync();
+        await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
     }
 
     public async Task DeleteAsync(string fileUri)
