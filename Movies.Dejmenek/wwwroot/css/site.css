@@ -19,6 +19,11 @@
     --bs-secondary-rgb: 255, 255, 255;
 }
 
+.preview {
+    object-fit: cover;
+    height: 300px;
+}
+
 .navbar-toggler-icon {
     background-image: url('../img/Menu.svg');
 }
@@ -59,8 +64,23 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
     color: white !important;
+    text-decoration: none;
 }
 
-a:hover {
+.btn-outline:hover {
     color: #FEDA34 !important;
+}
+
+.pagination .page-link {
+    background: var(--bs-primary) !important;
+    color: black !important;
+    border: none !important;
+}
+
+.pagination .page-item.active .page-link {
+    background: white !important;
+}
+
+.page-item.disabled {
+    color: grey;
 }
