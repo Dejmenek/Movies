@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Movies.Dejmenek.Data;
@@ -9,6 +10,7 @@ using Movies.Dejmenek.Services;
 
 namespace Movies.Dejmenek.Controllers
 {
+    [Authorize]
     public class MoviesController : Controller
     {
         private readonly MovieContext _context;
@@ -30,17 +32,17 @@ namespace Movies.Dejmenek.Controllers
             int? pageNumber
         )
         {
-            if (_context.Movie == null) return Problem("Entity set 'MvcMovieContext.Movie' is null.");
+            if (_context.Movies == null) return Problem("Entity set 'MvcMovieContext.Movie' is null.");
 
-            IQueryable<string> genreQuery = from m in _context.Movie
+            IQueryable<string> genreQuery = from m in _context.Movies
                                             orderby m.Genre
                                             select m.Genre;
 
-            IQueryable<string> ratingsQuery = from m in _context.Movie
+            IQueryable<string> ratingsQuery = from m in _context.Movies
                                               orderby m.Rating
                                               select m.Rating;
 
-            var movies = from m in _context.Movie
+            var movies = from m in _context.Movies
                          select m;
 
             if (!string.IsNullOrEmpty(searchString))
@@ -90,7 +92,7 @@ namespace Movies.Dejmenek.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie
+            var movie = await _context.Movies
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
@@ -145,7 +147,7 @@ namespace Movies.Dejmenek.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie.FindAsync(id);
+            var movie = await _context.Movies.FindAsync(id);
             if (movie == null)
             {
                 return NotFound();
@@ -226,7 +228,7 @@ namespace Movies.Dejmenek.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie
+            var movie = await _context.Movies
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
@@ -241,11 +243,11 @@ namespace Movies.Dejmenek.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = await _context.Movie.FindAsync(id);
+            var movie = await _context.Movies.FindAsync(id);
             if (movie != null)
             {
                 if (movie.ImageUri != null) await _blobService.DeleteAsync(movie.ImageUri);
-                _context.Movie.Remove(movie);
+                _context.Movies.Remove(movie);
             }
 
             await _context.SaveChangesAsync();
@@ -254,7 +256,7 @@ namespace Movies.Dejmenek.Controllers
 
         private bool MovieExists(int id)
         {
-            return _context.Movie.Any(e => e.Id == id);
+            return _context.Movies.Any(e => e.Id == id);
         }
     }
 }
