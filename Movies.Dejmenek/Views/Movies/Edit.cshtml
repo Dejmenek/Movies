@@ -1,4 +1,4 @@
-﻿@model Movies.Dejmenek.Models.MovieDTO
+﻿@model Movies.Dejmenek.Models.EditMovieViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -24,6 +24,15 @@
                        class="form-control"
                        accept=".png, .jpg, .jpeg" />
             </div>
+            @if (Model.ImageUri != null)
+            {
+                <div class="form-group">
+                    <label>
+                        <input asp-for="RemoveImage" type="checkbox" />
+                        Remove current image
+                    </label>
+                </div>
+            }
             <div class="col-md form-group">
                 <label asp-for="Rating" class="control-label text-secondary"></label>
                 <input asp-for="Rating" class="form-control" />
