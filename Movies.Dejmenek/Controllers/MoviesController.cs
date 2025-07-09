@@ -14,15 +14,16 @@ namespace Movies.Dejmenek.Controllers
     public class MoviesController : Controller
     {
         private readonly MovieContext _context;
-        private readonly IBlobService _blobService;
+        private readonly IImageUploadService _imageUploadService;
         private readonly ILogger<MoviesController> _logger;
         private const int _pageSize = 4;
 
-        public MoviesController(MovieContext context, IBlobService blobService, ILogger<MoviesController> logger)
+        public MoviesController(MovieContext context, ILogger<MoviesController> logger, IImageUploadService imageUploadService)
         {
             _context = context;
             _blobService = blobService;
             _logger = logger;
+            _imageUploadService = imageUploadService;
         }
 
         // GET: Movies
