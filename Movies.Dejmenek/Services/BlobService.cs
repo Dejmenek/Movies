@@ -1,4 +1,5 @@
-﻿using Azure.Storage.Blobs;
+﻿using Azure;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
 namespace Movies.Dejmenek.Services;
@@ -39,7 +40,7 @@ public class BlobService : IBlobService
 
             await blobClient.DeleteIfExistsAsync();
         }
-        catch (Azure.RequestFailedException ex)
+        catch (RequestFailedException ex)
         {
             _logger.LogError(ex, "BlobService: Failed to delete file from Blob Storage. URI: {FileUri}", fileUri);
             throw new InvalidOperationException("An error occurred while deleting the file. Please try again later.");
@@ -68,7 +69,7 @@ public class BlobService : IBlobService
 
             return blobClient.Uri.ToString();
         }
-        catch (Azure.RequestFailedException ex)
+        catch (RequestFailedException ex)
         {
             _logger.LogError(ex, "BlobService: Failed to upload file to Blob Storage. FileName: {FileName}", file.FileName);
             throw new InvalidOperationException("An error occurred while uploading the file. Please try again later.");
