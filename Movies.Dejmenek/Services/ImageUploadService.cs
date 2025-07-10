@@ -28,8 +28,11 @@ public class ImageUploadService : IImageUploadService
         }
     }
 
-    public async Task<string?> TryUploadImageAsync(IFormFile imageFile)
+    public async Task<string> UploadAsync(IFormFile? imageFile)
     {
+        if (imageFile == null)
+            throw new ArgumentException("Image file cannot be null.");
+
         try
         {
             return await _blobService.UploadAsync(imageFile);

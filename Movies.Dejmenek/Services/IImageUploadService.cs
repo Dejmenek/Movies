@@ -2,6 +2,6 @@
 
 public interface IImageUploadService
 {
-    Task<string?> TryUploadImageAsync(IFormFile imageFile);
+    Task<string> UploadAsync(IFormFile? imageFile);
     Task DeleteAsync(string imageUri);
 }
