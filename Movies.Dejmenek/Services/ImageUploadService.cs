@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Movies.Dejmenek.Exceptions;
 
 namespace Movies.Dejmenek.Services;
 
@@ -21,17 +22,9 @@ public class ImageUploadService : IImageUploadService
         {
             await _blobService.DeleteAsync(imageUri);
         }
-        catch (RequestFailedException ex)
+        catch (Exception ex) when (ex is RequestFailedException || ex is UriFormatException)
         {
-            _logger.LogWarning(ex, "Blob deletion failed due to a request error. URI: {ImageUri}", imageUri);
-        }
-        catch (UriFormatException ex)
-        {
-            _logger.LogWarning(ex, "Blob deletion failed due to an invalid URI format: {ImageUri}", imageUri);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error while deleting blob. URI: {ImageUri}", imageUri);
+            throw new ImageDeleteException("Failed to delete image.", ex);
         }
     }
 
@@ -41,15 +34,9 @@ public class ImageUploadService : IImageUploadService
         {
             return await _blobService.UploadAsync(imageFile);
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex) when (ex is RequestFailedException || ex is ArgumentException)
         {
-            _logger.LogError(ex, "Blob upload failed.");
+            throw new ImageUploadException("Failed to upload image.", ex);
         }
-        catch (ArgumentException ex)
-        {
-            _logger.LogError(ex, "Invalid image file.");
-        }
-
-        return null;
     }
 }
