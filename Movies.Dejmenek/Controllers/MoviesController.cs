@@ -121,7 +121,7 @@ namespace Movies.Dejmenek.Controllers
             if (!ModelState.IsValid)
             {
                 return View(createMovie);
-                }
+            }
 
             string? imageUri = null;
 
@@ -261,33 +261,33 @@ namespace Movies.Dejmenek.Controllers
                     editMovie.ImageUri = null;
                 }
                 catch (ImageDeleteException ex)
-                    {
+                {
                     _logger.LogWarning(ex, "Image deletion failed during Edit.");
                     ModelState.AddModelError("", "Failed to remove image. Please try again.");
                     return View(editMovie);
-                    }
+                }
             }
 
             try
             {
-                    var movie = new Movie
-                    {
-                        Id = editMovie.Id,
-                        Title = editMovie.Title,
-                        ReleaseDate = editMovie.ReleaseDate,
-                        Genre = editMovie.Genre,
-                        Price = editMovie.Price,
-                        Rating = editMovie.Rating,
-                        ImageUri = editMovie.ImageUri
-                    };
+                var movie = new Movie
+                {
+                    Id = editMovie.Id,
+                    Title = editMovie.Title,
+                    ReleaseDate = editMovie.ReleaseDate,
+                    Genre = editMovie.Genre,
+                    Price = editMovie.Price,
+                    Rating = editMovie.Rating,
+                    ImageUri = editMovie.ImageUri
+                };
 
-                    _context.Update(movie);
-                    await _context.SaveChangesAsync();
+                _context.Update(movie);
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
-                {
+            }
+            catch (DbUpdateConcurrencyException)
+            {
                 if (!string.IsNullOrWhiteSpace(newImageUri))
                 {
                     try
@@ -301,13 +301,13 @@ namespace Movies.Dejmenek.Controllers
                     }
                 }
 
-                    if (!MovieExists(editMovie.Id))
-                    {
+                if (!MovieExists(editMovie.Id))
+                {
                     _logger.LogError("Movie not found. Movie ID: {MovieId}", editMovie.Id);
-                        return NotFound();
-                    }
-                    else
-                    {
+                    return NotFound();
+                }
+                else
+                {
                     _logger.LogError("Concurrency error updating movie. Movie ID: {MovieId}", editMovie.Id);
                 }
 
@@ -328,12 +328,12 @@ namespace Movies.Dejmenek.Controllers
                     catch (ImageDeleteException deleteEx)
                     {
                         _logger.LogWarning(deleteEx, "Failed to delete uploaded image after failure.");
+                    }
                 }
-            }
 
                 ModelState.AddModelError("", "An unexpected error occurred. Please try again.");
-            return View(editMovie);
-        }
+                return View(editMovie);
+            }
         }
 
         // GET: Movies/Delete/5
@@ -362,10 +362,9 @@ namespace Movies.Dejmenek.Controllers
             var movie = await _context.Movies.FindAsync(id);
             try
             {
-            if (movie != null)
-            {
-                if (movie.ImageUri != null) await _blobService.DeleteAsync(movie.ImageUri);
-                _context.Movies.Remove(movie);
+                if (movie != null)
+                {
+                    _context.Movies.Remove(movie);
                     await _context.SaveChangesAsync();
                     if (movie.ImageUri != null) await _imageUploadService.DeleteAsync(movie.ImageUri);
                 }
