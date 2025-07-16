@@ -15,7 +15,8 @@ Log.Logger = new LoggerConfiguration()
         sinkOptions: new MSSqlServerSinkOptions
         {
             TableName = "Logs",
-            AutoCreateSqlTable = true
+            AutoCreateSqlTable = true,
+            AutoCreateSqlDatabase = true
         }
     )
     .CreateLogger();
