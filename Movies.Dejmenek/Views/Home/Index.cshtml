@@ -92,7 +92,10 @@
     </div>
 </section>
 
-<section class="d-flex flex-wrap justify-content-between align-items-center bg-primary p-5 rounded-3 my-4">
-    <h3 class="text-black">Join thousands of movie lovers</h3>
-    <a class="btn btn-outline-light fs-3 border-3 text-black">Sign Up Now</a>
-</section>
+@if (!User.Identity.IsAuthenticated)
+{
+    <section class="d-flex flex-wrap justify-content-between align-items-center bg-primary p-5 rounded-3 my-4">
+        <h3 class="text-black">Join thousands of movie lovers</h3>
+        <a class="btn btn-outline-light fs-3 border-3 text-black" asp-area="Identity" asp-page="/Account/Register">Sign Up Now</a>
+    </section>
+}
