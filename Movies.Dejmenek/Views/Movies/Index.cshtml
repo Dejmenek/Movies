@@ -46,18 +46,22 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
             @foreach (var item in Model.Movies!)
             {
-                <div class="col">
+                <div class="col d-flex">
                     <div class="card border-0">
                         <img src="@(Url.Content(item.ImageUri ?? "~/img/placeholder.jpg"))" class="card-img-top" alt="Movie poster for @item.Title" loading="lazy" style="height: 300px; object-fit: cover"/>
-                        <div class="card-body bg-primary">
+                        <div class="card-body bg-primary d-flex flex-column">
                             <div class="d-flex justify-content-between flex-wrap">
                                 <h4 class="card-title text-black">@Html.DisplayFor(modelItem => item.Title)</h4>
                                 <p class="card-text text-black">@Html.DisplayFor(modelItem => item.Price)</p>
                             </div>
-                            <p class="text-black fs-6">@Html.DisplayFor(modelItem => item.Rating) / @Html.DisplayFor(modelItem => item.Genre) / @Html.DisplayFor(modelItem => item.ReleaseDate)</p>
-                            <a asp-action="Edit" asp-route-id="@item.Id"><img src="~/img/Edit_fill.svg" alt="Edit" /></a>
-                            <a asp-action="Details" asp-route-id="@item.Id"><img src="~/img/File_dock_search.svg" alt="Details" /></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id"><img src="~/img/Trash.svg" alt="Delete" /></a>
+                            <div class="flex-grow-1">
+                                <p class="text-black fs-6">@Html.DisplayFor(modelItem => item.Rating) / @Html.DisplayFor(modelItem => item.Genre) / @Html.DisplayFor(modelItem => item.ReleaseDate)</p>
+                            </div>
+                            <div>
+                                <a asp-action="Edit" asp-route-id="@item.Id"><img src="~/img/Edit_fill.svg" alt="Edit" /></a>
+                                <a asp-action="Details" asp-route-id="@item.Id"><img src="~/img/File_dock_search.svg" alt="Details" /></a>
+                                <a asp-action="Delete" asp-route-id="@item.Id"><img src="~/img/Trash.svg" alt="Delete" /></a>
+                            </div>
                         </div>
                     </div>
                 </div>
