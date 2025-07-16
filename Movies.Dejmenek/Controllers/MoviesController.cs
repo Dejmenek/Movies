@@ -116,15 +116,19 @@ namespace Movies.Dejmenek.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating,ImageFile")] MovieDTO createMovie)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating,ImageFile")] CreateMovieViewModel createMovie)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                string imageUri = null;
-                if (createMovie.ImageFile != null)
-                {
-                    imageUri = await _blobService.UploadAsync(createMovie.ImageFile);
+                return View(createMovie);
                 }
+
+            string? imageUri = null;
+
+            try
+            {
+                imageUri = await _imageUploadService.UploadAsync(createMovie.ImageFile);
+
                 var movie = new Movie
                 {
                     Title = createMovie.Title,
@@ -134,9 +138,53 @@ namespace Movies.Dejmenek.Controllers
                     Rating = createMovie.Rating,
                     ImageUri = imageUri
                 };
+
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
+            }
+            catch (ImageUploadException ex)
+            {
+                _logger.LogWarning(ex, "Image upload failed.");
+                ModelState.AddModelError("", "There was a problem uploading the image. Please try again.");
+                return View(createMovie);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "An error occurred while saving the movie.");
+
+                if (imageUri != null)
+                {
+                    try
+                    {
+                        await _imageUploadService.DeleteAsync(imageUri);
+                    }
+                    catch (ImageDeleteException deleteEx)
+                    {
+                        _logger.LogWarning(deleteEx, "Failed to delete uploaded image after failure.");
+                    }
+                }
+
+                ModelState.AddModelError(string.Empty, "An error occurred while saving the movie.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred.");
+
+                if (imageUri != null)
+                {
+                    try
+                    {
+                        await _imageUploadService.DeleteAsync(imageUri);
+                    }
+                    catch (ImageDeleteException deleteEx)
+                    {
+                        _logger.LogWarning(deleteEx, "Failed to delete uploaded image after failure.");
+                    }
+                }
+
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
             }
 
             return View(createMovie);
