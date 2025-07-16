@@ -360,13 +360,25 @@ namespace Movies.Dejmenek.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var movie = await _context.Movies.FindAsync(id);
+            try
+            {
             if (movie != null)
             {
                 if (movie.ImageUri != null) await _blobService.DeleteAsync(movie.ImageUri);
                 _context.Movies.Remove(movie);
+                    await _context.SaveChangesAsync();
+                    if (movie.ImageUri != null) await _imageUploadService.DeleteAsync(movie.ImageUri);
+                }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "An error occurred while deleting the movie from the database. Movie ID: {MovieId}", id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while processing the movie deletion. Movie ID: {MovieId}", id);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
