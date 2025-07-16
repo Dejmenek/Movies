@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Movies.Dejmenek.Data;
 using Movies.Dejmenek.Enums;
+using Movies.Dejmenek.Exceptions;
 using Movies.Dejmenek.Helpers;
 using Movies.Dejmenek.Models;
 using Movies.Dejmenek.Services;
@@ -21,7 +22,6 @@ namespace Movies.Dejmenek.Controllers
         public MoviesController(MovieContext context, ILogger<MoviesController> logger, IImageUploadService imageUploadService)
         {
             _context = context;
-            _blobService = blobService;
             _logger = logger;
             _imageUploadService = imageUploadService;
         }
