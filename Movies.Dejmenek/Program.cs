@@ -35,6 +35,7 @@ builder.Services.AddAzureClients(clientBuilder =>
     clientBuilder.AddQueueServiceClient(builder.Configuration["StorageConnectionString:queue"]!, preferMsi: true);
 });
 builder.Services.AddSingleton<IBlobService, BlobService>();
+builder.Services.AddScoped<IImageUploadService, ImageUploadService>();
 
 
 var app = builder.Build();
